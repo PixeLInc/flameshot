@@ -44,6 +44,10 @@
 ImgurUploader::ImgurUploader(const QPixmap &capture, QWidget *parent) :
     QWidget(parent), m_pixmap(capture)
 {
+
+    // TODO: Don't pop up a window when copy only is active.
+    m_copyOnly = ConfigHandler().copyOnlyValue();
+
     setWindowTitle(tr("Upload to Imgur"));
     setWindowIcon(QIcon(":img/app/flameshot.svg"));
 
@@ -107,13 +111,13 @@ void ImgurUploader::upload() {
     QBuffer buffer(&byteArray);
     m_pixmap.save(&buffer, "PNG");
 
-    QUrlQuery urlQuery;
-    urlQuery.addQueryItem(QStringLiteral("title"), QStringLiteral("flameshot_screenshot"));
-    QString description = FileNameHandler().parsedPattern();
-    urlQuery.addQueryItem(QStringLiteral("description"), description);
+   // QUrlQuery urlQuery;
+   // urlQuery.addQueryItem("title", "flameshot_screenshot");
+   // QString description = FileNameHandler().parsedPattern();
+   // urlQuery.addQueryItem("description", description);
 
-    QUrl url(QStringLiteral("https://api.imgur.com/3/image"));
-    url.setQuery(urlQuery);
+    QUrl url("https://api.imgur.com/3/image");
+    // url.setQuery(urlQuery);
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader,
                       "application/application/x-www-form-urlencoded");
@@ -145,6 +149,11 @@ void ImgurUploader::onUploadOk() {
     m_hLayout->addWidget(m_openUrlButton);
     m_hLayout->addWidget(m_openDeleteUrlButton);
     m_hLayout->addWidget(m_toClipboardButton);
+
+
+    if (m_copyOnly)
+        // Copy it to clipboard automagically if we can.
+        ImgurUploader::copyURL();
 
     connect(m_copyUrlButton, &QPushButton::clicked,
             this, &ImgurUploader::copyURL);

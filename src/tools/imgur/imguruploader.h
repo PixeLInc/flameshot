@@ -47,6 +47,8 @@ private slots:
 private:
     QPixmap m_pixmap;
     QNetworkAccessManager *m_NetworkAM;
+    // nowindow
+    bool m_copyOnly;
 
     QVBoxLayout *m_vLayout;
     QHBoxLayout *m_hLayout;

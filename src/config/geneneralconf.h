@@ -32,6 +32,7 @@ public slots:
     void updateComponents();
 
 private slots:
+   void showCopyOnlyChanged(bool checked);
    void showHelpChanged(bool checked);
    void showDesktopNotificationChanged(bool checked);
    void showTrayIconChanged(bool checked);
@@ -43,6 +44,7 @@ private slots:
 
 private:
     QVBoxLayout *m_layout;
+    QCheckBox *m_copyMessage;
     QCheckBox *m_sysNotifications;
     QCheckBox *m_showTray;
     QCheckBox *m_helpMessage;
@@ -53,6 +55,7 @@ private:
     QPushButton *m_exportButton;
     QPushButton *m_resetButton;
 
+    void initCopyOnly();
     void initShowHelp();
     void initShowDesktopNotification();
     void initShowTrayIcon();

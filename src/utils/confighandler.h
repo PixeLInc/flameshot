@@ -43,6 +43,9 @@ public:
     QColor drawColorValue();
     void setDrawColor(const QColor &);
 
+    bool copyOnlyValue();
+    void setCopyOnly(const bool);
+
     bool showHelpValue();
     void setShowHelp(const bool);
 

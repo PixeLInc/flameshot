@@ -32,6 +32,7 @@
 GeneneralConf::GeneneralConf(QWidget *parent) : QWidget(parent) {
     m_layout = new QVBoxLayout(this);
     m_layout->setAlignment(Qt::AlignTop);
+    initCopyOnly();
     initShowHelp();
     initShowDesktopNotification();
     initShowTrayIcon();
@@ -46,6 +47,7 @@ GeneneralConf::GeneneralConf(QWidget *parent) : QWidget(parent) {
 
 void GeneneralConf::updateComponents() {
     ConfigHandler config;
+    m_copyMessage->setChecked(config.copyOnlyValue());
     m_helpMessage->setChecked(config.showHelpValue());
     m_sysNotifications->setChecked(config.desktopNotificationValue());
     m_autostart->setChecked(config.startupLaunchValue());
@@ -55,6 +57,10 @@ void GeneneralConf::updateComponents() {
 #if defined(Q_OS_LINUX) || defined(Q_OS_UNIX)
     m_showTray->setChecked(!config.disabledTrayIconValue());
 #endif
+}
+
+void GeneneralConf::showCopyOnlyChanged(bool checked) {
+    ConfigHandler().setCopyOnly(checked);
 }
 
 void GeneneralConf::showHelpChanged(bool checked) {
@@ -133,6 +139,18 @@ void GeneneralConf::resetConfiguration() {
     if (reply == QMessageBox::Yes) {
         ConfigHandler().setDefaults();
     }
+}
+
+void GeneneralConf::initCopyOnly() {
+    m_copyMessage = new QCheckBox(tr("Auto copy without window"), this);
+    ConfigHandler config;
+    bool checked = config.copyOnlyValue();
+    m_copyMessage->setChecked(checked);
+    m_copyMessage->setToolTip(tr("Copy link without popup"));
+    m_layout->addWidget(m_copyMessage);
+
+    connect(m_copyMessage, &QCheckBox::clicked, this,
+            &GeneneralConf::showCopyOnlyChanged);
 }
 
 

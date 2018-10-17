@@ -176,6 +176,18 @@ void ConfigHandler::setDrawColor(const QColor &c) {
     m_settings.setValue(QStringLiteral("drawColor"), c.name());
 }
 
+bool ConfigHandler::copyOnlyValue() {
+    bool res = true;
+    if (m_settings.contains("copyOnly")) {
+        res = m_settings.value("copyOnly").toBool();
+    }
+    return res;
+}
+
+void ConfigHandler::setCopyOnly(const bool showCopy) {
+    m_settings.setValue("copyOnly", showCopy);
+}
+
 bool ConfigHandler::showHelpValue() {
     bool res = true;
     if (m_settings.contains(QStringLiteral("showHelp"))) {
